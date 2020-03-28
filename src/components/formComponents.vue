@@ -17,7 +17,7 @@
               class="form-control"
               v-model="userData.username"
             />
-            <div>{{ errors.username }}</div>
+            <div class="error">{{ errors.username }}</div>
           </div>
           <div class="form-group">
             <label for="password">
@@ -30,6 +30,7 @@
               class="form-control"
               v-model="userData.password"
             />
+            <div class="error">{{ errors.password }}</div>
           </div>
           <div class="form-group">
             <label for="email">
@@ -43,6 +44,8 @@
               v-model="userData.email"
             />
           </div>
+          <div class="error">{{ errors.email }}</div>
+
           <div class="row">
             <div class="col-xs-12 col-md-12 form-group">
               <label for="gender">Gender</label>
@@ -220,11 +223,6 @@
 </template>
 
 <script>
-const validateUsername = username => {
-  if (!username.length) {
-    return { valid: false, error: "Username Is required" };
-  }
-};
 export default {
   name: "formComponents",
 
@@ -241,11 +239,16 @@ export default {
         genders: ["Male", "Female"],
         selectedGender: "Male",
         date: new Date(),
-        isSaved: true
+        isSaved: false
       },
       valid: true,
       success: false,
-      errors: {},
+
+      errors: {
+        username: null,
+        password: null,
+        email: null
+      },
       msg: null
     };
   },
@@ -262,21 +265,50 @@ export default {
   // },
 
   methods: {
+    validUsername() {
+      if (!this.userData.username) {
+        this.errors.username = "Username Is required";
+        return false;
+      }
+      this.errors.username = null;
+      return true;
+    },
+    validPassword() {
+      if (!this.userData.password) {
+        this.errors.password = "Password Is required";
+        return false;
+      }
+      if (this.userData.password.length < 4) {
+        this.errors.password = "password is to short";
+        return false;
+      }
+      this.errors.password = null;
+      return true;
+    },
+    validEmail() {
+      const regex = /^([A-Za-z0-9_\-.+])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,})$/;
+      const matches = regex.test(this.userData.email.toLowerCase());
+      if (!this.userData.email) {
+        this.errors.email = "Email Is required";
+        return false;
+      }
+      if (!matches) {
+        this.errors.email = "please enter a valid email";
+        return false;
+      }
+
+      this.errors.email = null;
+      return true;
+    },
     save() {
-      this.errors = {};
-      const validUsername = validateUsername(this.userData.username);
-      this.errors.username = validUsername.error;
-      if (this.valid) {
-        this.valid = validUsername.valid;
+      this.validUsername();
+      this.validPassword();
+      this.validEmail();
+      if (this.errors.username || this.errors.password || this.errors.email) {
+        return false;
       }
-      const data = {
-        userData: this.userData
-      };
-      if (this.valid) {
-        alert(JSON.stringify(data, null, 2));
-        this.userData.isSaved = true;
-        return true;
-      }
+
+      this.userData.isSaved = true;
     },
     onChange(date, dateString) {
       console.log(date, dateString);
@@ -285,4 +317,10 @@ export default {
 };
 </script>
 
-<style></style>
+return true; // if (this.valid) { // alert(JSON.stringify(data, null, 2)); //
+this.userData.isSaved = true; // }
+<style>
+.error {
+  color: red;
+}
+</style>
