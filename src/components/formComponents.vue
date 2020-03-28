@@ -301,14 +301,17 @@ export default {
       return true;
     },
     save() {
+      const data = {
+        userData: this.userData
+      };
       this.validUsername();
       this.validPassword();
       this.validEmail();
       if (this.errors.username || this.errors.password || this.errors.email) {
         return false;
       }
-
       this.userData.isSaved = true;
+      alert(JSON.stringify(data, null, 2));
     },
     onChange(date, dateString) {
       console.log(date, dateString);
@@ -317,8 +320,7 @@ export default {
 };
 </script>
 
-return true; // if (this.valid) { // alert(JSON.stringify(data, null, 2)); //
-this.userData.isSaved = true; // }
+return true; // if (this.valid) { // this.userData.isSaved = true; // }
 <style>
 .error {
   color: red;
