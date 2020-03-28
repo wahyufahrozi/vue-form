@@ -5,6 +5,7 @@
         <div
           class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3"
         >
+          <h3>FORM</h3>
           <hr />
           <div class="form-group">
             <label for="username">
@@ -252,18 +253,6 @@ export default {
       msg: null
     };
   },
-  // validations: {
-  //   username: {
-  //     required
-  //   },
-  //   password: {
-  //     required
-  //   },
-  //   email: {
-  //     required
-  //   }
-  // },
-
   methods: {
     validUsername() {
       if (!this.userData.username) {
@@ -320,7 +309,6 @@ export default {
 };
 </script>
 
-return true; // if (this.valid) { // this.userData.isSaved = true; // }
 <style>
 .error {
   color: red;
